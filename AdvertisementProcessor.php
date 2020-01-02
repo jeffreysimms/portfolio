@@ -12,10 +12,24 @@ use App\Advertisement;
 
 class AdvertisementProcessor {
 
+	/**
+	 * @var array
+	 */
 	public static $dataTemplate = [ 'department' => null, 'content' => null ];
 
+	/**
+	 * @var array
+	 */
 	public static $processors = [ 'pdf' => 'pdfProcessor', 'html' => 'htmlProcessor' ];
 
+	/**
+	 * Determines which processor to use based on type (html or pdf).
+	 *
+	 * @param Request            $request
+	 * @param Advertisement|null $advertisement
+	 *
+	 * @return Request
+	 */
 	public static function handleJsonStorage( Request $request, Advertisement $advertisement = null ) {
 
 		if ( array_key_exists( $request->get( 'type' ), self::$processors ) ) {
@@ -26,6 +40,14 @@ class AdvertisementProcessor {
 		return $request;
 	}
 
+	/**
+	 * Processor for handling the storage of a html (text) advertisement.
+	 *
+	 * @param Request       $request
+	 * @param Advertisement $advertisement
+	 *
+	 * @return Request
+	 */
 	public static function htmlProcessor( Request $request, Advertisement $advertisement ) {
 
 		AdvertisementFileController::destroy( $advertisement );
@@ -39,6 +61,14 @@ class AdvertisementProcessor {
 		return $request;
 	}
 
+	/**
+	 * Processor for handling the storage of a pdf (file) advertisement.
+	 *
+	 * @param Request       $request
+	 * @param Advertisement $advertisement
+	 *
+	 * @return Request
+	 */
 	public static function pdfProcessor( Request $request, Advertisement $advertisement ) {
 		if ( $request->file( 'file_upload' ) !== null ) {
 
